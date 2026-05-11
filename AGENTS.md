@@ -62,7 +62,9 @@ repo-security-scan/
 │   └── schema.yaml         # Full YAML config schema with type hints, defaults, and examples
 │
 ├── scripts/                # Additional utility scripts
-│   └── scheduled_scan.py   # Monitors Git for new commits and triggers incremental scans
+│   ├── scheduled_scan.py   # Monitors local Git repo for new commits (daemon)
+│   ├── scan_profile.py     # Bulk scan every repo in a GitHub profile (full scan)
+│   └── monitor_profile.py  # Crontab-friendly incremental profile monitor (recommended)
 │
 └── scan-reports/           # Output directory — JSON reports saved per scan run
 ```

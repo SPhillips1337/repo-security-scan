@@ -11,3 +11,5 @@ response/
 scratch/
 .venv/
 .env-bak
+profile_scan_state.json
+repo_cache/

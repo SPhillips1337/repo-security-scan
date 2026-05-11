@@ -31,6 +31,7 @@ def main():
     parser.add_argument("--temp-dir", default="temp_repos", help="Directory for temporary clones.")
     parser.add_argument("--report", default="profile_report.md", help="Path for the generated report.")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output.")
+    parser.add_argument("--limit", type=int, default=None, help="Limit the number of repositories to scan.")
     
     args = parser.parse_args()
     username = args.username
@@ -40,7 +41,7 @@ def main():
         sys.exit(1)
 
     print(f"Fetching repositories for user: {username}...")
-    repos = get_user_repositories(username)
+    repos = get_user_repositories(username, limit=args.limit)
     print(f"Found {len(repos)} repositories.")
 
     temp_base = Path(args.temp_dir).resolve()
