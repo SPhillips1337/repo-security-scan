@@ -136,7 +136,7 @@ def main():
                 subprocess.run(["git", "-C", str(target_dir), "fetch", "--all"], 
                                check=True, capture_output=True)
         except subprocess.CalledProcessError as exc:
-            print(f"Error updating {name}: {exc.stderr.decode()}")
+            print(f"Error updating {name}: {exc.stderr.decode() if exc.stderr else 'Unknown error'}")
             continue
 
         # Discover all branches
