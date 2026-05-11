@@ -215,9 +215,8 @@ def main():
                 current_repo_branch = (repo_name, branch_name)
             
             # Use raw aggregator to get severity value for display
-            from src.aggregator import ResultAggregator
-            agg = ResultAggregator()
-            sev = agg.get_severity(finding.matched_secret_type).value
+            # Use raw aggregator to get severity value for display
+            sev = finding.matched_secret_type
             
             body += f"[{sev}] {finding.matched_secret_type} in {finding.file_path.replace(str(cache_base / repo_name), '').lstrip('/')}:{finding.line_number}\n"
             body += f"  Matched: ...{finding.matched_text}...\n"
