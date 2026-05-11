@@ -42,8 +42,9 @@ repo-security-scan/
 ├── config/              # Configuration files
 │   └── schema.yaml      # Configuration schema reference
 ├── scripts/             # Additional utility scripts
-│   ├── scheduled_scan.py # Git monitoring with email alerts
-│   └── scan_profile.py   # Bulk scanning of a GitHub profile
+│   ├── scheduled_scan.py # Git monitoring with email alerts (daemon)
+│   ├── scan_profile.py   # Bulk scanning of a GitHub profile (full)
+│   └── monitor_profile.py # Incremental profile monitor (crontab-friendly)
 └── scan-reports/        # Output directory for scan reports
 ```
 
@@ -209,9 +210,39 @@ pkill -f "scheduled_scan.py"
 - Use an absolute path for the project directory (as shown above) rather than a relative one, since cron runs with a minimal environment.
 - To verify your crontab was saved correctly, run `crontab -l`.
 
-### GitHub Profile Bulk Scan
+### GitHub Profile Monitoring (Crontab)
 
-Scan every repository belonging to a specific GitHub user:
+For continuous monitoring of an entire GitHub profile, use `scripts/monitor_profile.py`. This script is optimized for `cron`: it fetches all repositories for a user, maintains state to only scan new commits, and exits after one pass.
+
+**1. Setup your `.env` with the target username:**
+```bash
+GITHUB_USERNAME=your-username
+GITHUB_TOKEN=your-token (recommended for rate limits)
+```
+
+**2. Add to Crontab:**
+```bash
+# Run a profile-wide incremental scan every 15 minutes
+*/15 * * * * cd /home/stephen/projects/repo-security-scan && python3 scripts/monitor_profile.py >> scan.log 2>&1
+```
+
+**How it works:**
+- It clones/updates repositories into a local `repo_cache/` directory.
+- It tracks the last scanned commit for each repo in `profile_scan_state.json`.
+- It performs an `incremental` scan only when new commits are detected.
+- If `SMTP` is configured, it sends a **consolidated email alert** for any CRITICAL or HIGH findings found across all repositories in that run.
+
+### Scheduled Monitoring (Local Repo)
+
+Alternatively, if you want to monitor a **single local repository** as a background daemon:
+
+```bash
+python scripts/scheduled_scan.py . --interval 300 --verbose
+```
+
+### GitHub Profile Bulk Scan (Legacy)
+
+Scan every repository belonging to a specific GitHub user (full scan mode):
 
 ```bash
 # Uses GITHUB_USERNAME from .env by default
@@ -331,3 +362,4 @@ While the tool can scan any public profile, it is naturally limited by the GitHu
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+

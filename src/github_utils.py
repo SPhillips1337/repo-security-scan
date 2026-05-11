@@ -8,12 +8,15 @@ import requests
 import os
 from typing import List, Dict, Optional
 
-def get_user_repositories(username: str, token: Optional[str] = None) -> List[Dict[str, str]]:
-    """Fetch all public repositories for a given GitHub user.
+def get_user_repositories(username: str, token: Optional[str] = None, sort: str = "pushed", direction: str = "desc", limit: Optional[int] = None) -> List[Dict[str, str]]:
+    """Fetch public repositories for a given GitHub user.
 
     Args:
         username: GitHub username (e.g., 'SPhillips1337').
         token: Optional GitHub personal access token for higher rate limits.
+        sort: Field to sort by ('created', 'updated', 'pushed', 'full_name').
+        direction: Sort direction ('asc', 'desc').
+        limit: Maximum number of repositories to return.
 
     Returns:
         List of dictionaries containing 'name' and 'clone_url'.
@@ -25,7 +28,7 @@ def get_user_repositories(username: str, token: Optional[str] = None) -> List[Di
         headers["Authorization"] = f"token {token or os.environ.get('GITHUB_TOKEN')}"
 
     while True:
-        url = f"https://api.github.com/users/{username}/repos?per_page=100&page={page}"
+        url = f"https://api.github.com/users/{username}/repos?per_page=100&page={page}&sort={sort}&direction={direction}"
         response = requests.get(url, headers=headers)
         
         if response.status_code != 200:
@@ -40,8 +43,11 @@ def get_user_repositories(username: str, token: Optional[str] = None) -> List[Di
             if not repo.get("fork"):  # Optional: skip forks
                 repos.append({
                     "name": repo["name"],
-                    "clone_url": repo["clone_url"]
+                    "clone_url": repo["clone_url"],
+                    "default_branch": repo.get("default_branch", "main")
                 })
+                if limit and len(repos) >= limit:
+                    return repos
         
         page += 1
         
