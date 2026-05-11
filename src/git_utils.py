@@ -36,7 +36,7 @@ def get_changed_files(repo_path: str, base_ref: str = "HEAD~1", target_ref: str 
         # --diff-filter=AMRT excludes Deleted (D) files as they don't exist anymore
         cmd = [
             "git", "-C", repo_path, "diff", "--name-only", "--diff-filter=AMRT",
-            f"{base_ref}...{target_ref}"
+            f"{base_ref}..{target_ref}"
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         

@@ -47,29 +47,49 @@ repo-security-scan/
 └── scan-reports/        # Output directory for scan reports
 ```
 
-## Installation
+## Quick Installation
 
-### Prerequisites
-
-- Python 3.8+
-- `pyyaml` (optional, for YAML config support)
-- `requests` (for GitHub API discovery)
-- `python-dotenv` (for `.env` file support)
-
-### Steps
+The easiest way to get started is using our interactive install script, which handles dependencies, configuration, and scheduling for you:
 
 ```bash
-# Clone the repository
-git clone <repo-url> repo-security-scan
-cd repo-security-scan
+# Run the interactive installer
+chmod +x install.sh
+./install.sh
+```
 
-# Install dependencies
+### Manual Installation
+
+If you prefer to set things up manually:
+
+```bash
+# Install core dependencies
 pip install pyyaml requests python-dotenv
 
 # Set up configuration
 cp .env.template .env
 # Edit .env with your SMTP and GitHub settings
 ```
+
+## AI Integration (MCP)
+
+Repo Security Scanner now includes a **Model Context Protocol (MCP)** server, allowing AI assistants (like Claude or Gemini) to securely scan your repositories and analyze security risks.
+
+### Setup MCP
+
+1. Install MCP dependencies:
+   ```bash
+   pip install mcp fastmcp
+   ```
+
+2. Run the server:
+   ```bash
+   fastmcp run mcp_server.py
+   ```
+
+3. **Tools available to AI:**
+   - `scan_directory`: Perform a security audit on any local path.
+   - `list_patterns`: See exactly what secrets the scanner can detect.
+   - `get_latest_report`: Retrieve results from the most recent scan.
 
 No additional packages are required for basic scanning. The tool runs entirely from source without a formal package installation.
 
