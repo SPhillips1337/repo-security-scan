@@ -67,6 +67,29 @@ chmod +x install.sh
 ./install.sh
 ```
 
+### Python Virtual Environment (Recommended)
+
+For a clean, isolated setup — especially if you work on multiple Python projects — it is recommended to use a virtual environment before installing dependencies. This prevents package conflicts and keeps your global Python installation tidy.
+
+```bash
+# 1. Create a virtual environment named ".venv" in the project directory
+python3 -m venv .venv
+
+# 2. Activate it
+#    Linux / macOS:
+source .venv/bin/activate
+#    Windows (CMD):
+# .venv\Scripts\activate.bat
+#    Windows (PowerShell):
+# .venv\Scripts\Activate.ps1
+
+# 3. Verify activation — your shell prompt should now show (.venv)
+python --version
+pip list
+```
+
+Once activated, any `pip install` or `python` command runs inside the isolated environment. To leave it later, simply run `deactivate`.
+
 ### Manual Installation
 
 If you prefer to set things up manually:
