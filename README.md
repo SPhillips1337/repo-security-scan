@@ -227,10 +227,10 @@ GITHUB_TOKEN=your-token (recommended for rate limits)
 ```
 
 **How it works:**
-- It clones/updates repositories into a local `repo_cache/` directory.
-- It tracks the last scanned commit for each repo in `profile_scan_state.json`.
-- It performs an `incremental` scan only when new commits are detected.
-- If `SMTP` is configured, it sends a **consolidated email alert** for any CRITICAL or HIGH findings found across all repositories in that run.
+- **Multi-Branch Support**: It automatically discovers and tracks all remote branches for every repository in the profile.
+- **Efficient Caching**: Clones/updates repositories into a local `repo_cache/` directory.
+- **Stateful Scanning**: Tracks the last scanned commit for each branch in `profile_scan_state.json` to ensure only new changes are scanned.
+- **Consolidated Alerts**: If `SMTP` is configured, it sends a **single consolidated email alert** for any CRITICAL or HIGH findings found across all repositories and branches in that run.
 
 ### Scheduled Monitoring (Local Repo)
 
