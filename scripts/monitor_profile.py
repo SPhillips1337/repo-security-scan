@@ -150,7 +150,11 @@ def main():
         for branch in branches:
             try:
                 # Get current commit for this branch
+                # Get current commit for this branch
                 current_commit = get_branch_head(str(target_dir), branch)
+                if not current_commit:
+                    print(f"Warning: Could not get commit hash for {name} [{branch}], skipping.")
+                    continue
                 last_commit = repo_state.get(branch)
                 
                 if current_commit == last_commit and not args.force_full:
