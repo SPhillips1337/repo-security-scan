@@ -71,11 +71,14 @@ def get_remote_branches(repo_path: str) -> List[str]:
 
 def get_branch_head(repo_path: str, branch: str) -> str:
     """Get the latest commit hash for a specific remote branch."""
-    result = subprocess.run(
-        ["git", "-C", repo_path, "rev-parse", f"origin/{branch}"],
-        capture_output=True, text=True, check=True
-    )
-    return result.stdout.strip()
+    try:
+        result = subprocess.run(
+            ["git", "-C", repo_path, "rev-parse", f"origin/{branch}"],
+            capture_output=True, text=True, check=True
+        )
+        return result.stdout.strip()
+    except subprocess.CalledProcessError:
+        return ""
 
 def main():
     parser = argparse.ArgumentParser(description="Monitor a GitHub profile for new commits and scan them.")
