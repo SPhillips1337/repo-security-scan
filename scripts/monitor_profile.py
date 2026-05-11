@@ -222,11 +222,24 @@ def main():
                 current_repo_branch = (repo_name, branch_name)
             
             # Use raw aggregator to get severity value for display
-            # Use raw aggregator to get severity value for display
-            sev = finding.matched_secret_type
+            from src.aggregator import ResultAggregator
+            agg = ResultAggregator()
             
-            body += f"[{sev}] {finding.matched_secret_type} in {finding.file_path.replace(str(cache_base / repo_name), '').lstrip('/')}:{finding.line_number}\n"
+            # Find which severity list this finding belongs to for display
+            sev = "UNKNOWN"
+            for s, findings in report.findings_by_severity.items():
+                if finding in findings:
+                    sev = s.value
+                    break
+            
+            file_path, line_num = finding.first_occurrence
+            # Remove the cache base path for cleaner reporting
+            display_path = file_path.replace(str(cache_base / repo_name), '').lstrip('/')
+            
+            body += f"[{sev}] {finding.matched_secret_type} in {display_path}:{line_num}\n"
             body += f"  Matched: ...{finding.matched_text}...\n"
+            if finding.occurrence_count > 1:
+                body += f"  (And {finding.occurrence_count - 1} more locations)\n"
         
         body += "\n\nACTION REQUIRED: Please review and rotate these secrets immediately."
         
