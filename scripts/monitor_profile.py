@@ -193,7 +193,7 @@ def main():
                 state[name] = repo_state
                 
             except subprocess.CalledProcessError as exc:
-                print(f"Error processing branch {branch} in {name}: {exc.stderr.decode()}")
+                print(f"Error processing branch {branch} in {name}: {exc.stderr.decode() if exc.stderr else 'Unknown error'}")
                 continue
 
     # Save final state
