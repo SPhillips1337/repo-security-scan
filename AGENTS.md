@@ -56,7 +56,9 @@ repo-security-scan/
 ├── src/                    # Core scanning modules (imported lazily by main.py)
 │   ├── scanner.py          # FileScanner class: directory walk, binary detection, per-file regex scan
 │   ├── patterns.py         # SecretPattern definitions, Severity enum, PATTERN_REGISTRY, category index
-│   └── aggregator.py       # ResultAggregator: deduplication, grouping by severity/type, AggregatedReport
+│   ├── aggregator.py       # ResultAggregator: deduplication, grouping by severity/type, AggregatedReport
+│   ├── notifier.py         # Notifier class: SMTP email alerts for security findings
+│   └── git_utils.py        # Git utilities: remote discovery, branch tracking, head commit retrieval
 │
 ├── config/                 # Configuration schema and reference files
 │   └── schema.yaml         # Full YAML config schema with type hints, defaults, and examples
@@ -64,7 +66,7 @@ repo-security-scan/
 ├── scripts/                # Additional utility scripts
 │   ├── scheduled_scan.py   # Monitors local Git repo for new commits (daemon)
 │   ├── scan_profile.py     # Bulk scan every repo in a GitHub profile (full scan)
-│   └── monitor_profile.py  # Crontab-friendly incremental profile monitor (recommended)
+│   └── monitor_profile.py  # Multi-branch GitHub profile monitor with consolidated alerts (recommended)
 │
 └── scan-reports/           # Output directory — JSON reports saved per scan run
 ```
