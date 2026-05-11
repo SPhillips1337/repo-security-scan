@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+scan-reports/
+temp_repos/
+scan.log
+.last_scanned_commit
+report.md
+profile_report.md
+response/
+scratch/
