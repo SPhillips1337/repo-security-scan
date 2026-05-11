@@ -49,7 +49,17 @@ repo-security-scan/
 
 ## Quick Installation
 
-The easiest way to get started is using our interactive install script, which handles dependencies, configuration, and scheduling for you:
+The easiest way to get started depends on how you acquire the code. Choose one of the following methods:
+
+### 🚀 Remote Install (Recommended)
+Use `curl` to download and run the installer directly from this repository:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/SPhillips1337/repo-security-scan/main/install.sh | bash
+```
+
+### 🛠️ Local Install (Using local script)
+If you have cloned the repository locally, use our interactive install script, which handles dependencies, configuration, and scheduling for you:
 
 ```bash
 # Run the interactive installer

@@ -9,3 +9,5 @@ report.md
 profile_report.md
 response/
 scratch/
+.venv/
+.env-bak
