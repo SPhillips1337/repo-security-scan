@@ -162,6 +162,53 @@ Automatically monitor a repository for new commits and trigger incremental scans
 python scripts/scheduled_scan.py . --interval 300 --verbose
 ```
 
+### Crontab Setup (Continuous Monitoring)
+
+For hands-off, continuous monitoring you can schedule the scanner via `cron`. This is ideal for running periodic scans on your own repositories without keeping a terminal open.
+
+**1. Open your crontab editor:**
+
+```bash
+crontab -e
+```
+
+**2. Add a scheduled entry:**
+
+The recommended approach is to use `main.py` in incremental mode, which runs once and exits — making it ideal for cron:
+
+```bash
+# Run an incremental security scan every 15 minutes, log output to scan.log
+*/15 * * * * cd /home/stephen/projects/repo-security-scan && python3 main.py . --scan-mode incremental >> scan.log 2>&1
+```
+
+Alternatively, if you prefer the scheduled scanner's commit-tracking and email alert features, run it as a long-lived daemon. Since `scheduled_scan.py` runs an infinite loop, **you must kill any existing instance before starting a new one**:
+
+**From cron (kill previous instance first):**
+```bash
+# Every 15 min: kill any running scanner, then start fresh
+*/15 * * * * cd /home/stephen/projects/repo-security-scan && pkill -f "scheduled_scan.py" || true; python3 scripts/scheduled_scan.py . --interval 900 >> scan.log 2>&1
+```
+
+**Or run it manually as a background daemon (no cron needed):**
+```bash
+# Start once — it runs continuously until stopped
+cd /home/stephen/projects/repo-security-scan && python3 scripts/scheduled_scan.py . --interval 900 >> scan.log 2>&1 &
+
+# Stop it later with:
+pkill -f "scheduled_scan.py"
+```
+
+**How it works:**
+- `*/15 * * * *` — Triggers every 15 minutes. Adjust to your preferred frequency (e.g., `0 * * * *` for hourly).
+- `cd /path/to/repo-security-scan && ...` — Changes into the project directory before running so relative paths and `.env` loading work correctly.
+- `--scan-mode incremental` — Only scans files changed since the last commit (fast and focused).
+- `>> scan.log 2>&1` — Appends both stdout and stderr to `scan.log` in the project directory for later review.
+
+**Tips:**
+- Ensure `.env` is configured with SMTP settings if you want email alerts on critical findings.
+- Use an absolute path for the project directory (as shown above) rather than a relative one, since cron runs with a minimal environment.
+- To verify your crontab was saved correctly, run `crontab -l`.
+
 ### GitHub Profile Bulk Scan
 
 Scan every repository belonging to a specific GitHub user:
